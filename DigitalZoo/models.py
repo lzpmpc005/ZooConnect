@@ -1,5 +1,6 @@
 from django.db import models
-
+from django.http import JsonResponse
+from django.contrib import admin
 class Species(models.Model):
     name = models.CharField(max_length=100)
     habitat = models.CharField(max_length=100)
@@ -31,3 +32,18 @@ class Animal(models.Model):
 
     def __str__(self):
         return self.name
+
+@admin.register(Species)
+class SpeciesAdmin(admin.ModelAdmin):
+    list_display = ('name', 'habitat', 'temperature', 'humidity', 'light_intensity')
+    search_fields = ('name', 'habitat')
+
+@admin.register(Venue)
+class VenueAdmin(admin.ModelAdmin):
+    list_display = ('name', 'habitat', 'location', 'size', 'temperature', 'humidity', 'light_intensity')
+    search_fields = ('name', 'habitat', 'location')
+
+@admin.register(Animal)
+class AnimalAdmin(admin.ModelAdmin):
+    list_display = ('name', 'age', 'diet', 'species', 'venue')
+    search_fields = ('name', 'diet', 'species__name', 'venue__name')
