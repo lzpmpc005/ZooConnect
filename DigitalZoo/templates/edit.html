@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Entity</title>
+</head>
+<body>
+    <h2>Edit Entity</h2>
+
+    <h3>Species</h3>
+    {% for s in species %}
+    <div>
+        <p>{{ s.name }}</p>
+
+        <button onclick="editEntity('species', {{ s.id }})">Edit</button>
+    </div>
+    {% endfor %}
+
+  
+    <h3>Animals</h3>
+    {% for a in animals %}
+    <div>
+        <p>{{ a.name }}</p>
+   
+        <button onclick="editEntity('animal', {{ a.id }})">Edit</button>
+    </div>
+    {% endfor %}
+
+
+    <h3>Venues</h3>
+    {% for v in venues %}
+    <div>
+        <p>{{ v.name }}</p>
+   
+        <button onclick="editEntity('venue', {{ v.id }})">Edit</button>
+    </div>
+    {% endfor %}
+
+
+    <form id="updateForm" style="display: none;">
+   
+        <input type="hidden" id="entityType" name="entity_type">
+        <input type="hidden" id="entityId" name="entity_id">
+    
+        <button type="submit">Save</button>
+    </form>
+
+    <script>
+        function editEntity(entityType, entityId) {
+            // Populate the form with the current entity details
+            document.getElementById('entityType').value = entityType;
+            document.getElementById('entityId').value = entityId;
+            // Show the form
+            document.getElementById('updateForm').style.display = 'block';
+        }
+
+   
+        document.getElementById('updateForm').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+            var form = this;
+            var formData = new FormData(form); // Create FormData object from form data
+   
+            fetch('/edit_entity/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message); 
+
+                form.style.display = 'none';
+            })
+            .catch(error => console.error('Error updating entity:', error));
+        });
+    </script>
+    <div>
+        <button onclick="location.href='/homepage/'">Homepage</button>
+    </div>
+</body>
+</html>

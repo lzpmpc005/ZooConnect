@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Entity</title>
+</head>
+<body>
+    <h2>Add Entity</h2>
+    <form id="addEntityForm" method="POST">
+        {% csrf_token %}
+        <label for="entity_type">Entity Type:</label>
+        <select name="entity_type" id="entity_type">
+            <option value="species">Species</option>
+            <option value="animal">Animal</option>
+            <option value="venue">Venue</option>
+        </select>
+        <br><br>
+ 
+        <div id="speciesFields">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name"><br>
+            <label for="habitat">Habitat:</label>
+            <input type="text" id="habitat" name="habitat"><br>
+            <label for="temperature">Temperature:</label>
+            <input type="text" id="temperature" name="temperature"><br>
+            <label for="humidity">Humidity:</label>
+            <input type="text" id="humidity" name="humidity"><br>
+            <label for="light_intensity">Light Intensity:</label>
+            <input type="text" id="light_intensity" name="light_intensity"><br>
+        </div>
+
+        <div id="animalFields" style="display: none;">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name"><br>
+            <label for="age">Age:</label>
+            <input type="text" id="age" name="age"><br>
+            <label for="diet">Diet:</label>
+            <input type="text" id="diet" name="diet"><br>
+            <label for="species">Species:</label>
+            <select name="species" id="species">
+                {% for species in species_list %}
+                    <option value="{{ species.id }}">{{ species.name }}</option>
+                {% endfor %}
+            </select><br>
+            <label for="venue">Venue:</label>
+            <select name="venue" id="venue">
+                {% for venue in venue_list %}
+                    <option value="{{ venue.id }}">{{ venue.name }}</option>
+                {% endfor %}
+            </select><br>
+        </div>
+
+        <div id="venueFields" style="display: none;">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name"><br>
+            <label for="habitat">Habitat:</label>
+            <input type="text" id="habitat" name="habitat"><br>
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location"><br>
+            <label for="size">Size:</label>
+            <input type="text" id="size" name="size"><br>
+            <label for="temperature">Temperature:</label>
+            <input type="text" id="temperature" name="temperature"><br>
+            <label for="humidity">Humidity:</label>
+            <input type="text" id="humidity" name="humidity"><br>
+            <label for="light_intensity">Light Intensity:</label>
+            <input type="text" id="light_intensity" name="light_intensity"><br>
+        </div>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+    <script>
+        function submitForm(submitType) {
+            var form = document.getElementById('addEntityForm');
+            var entityType = document.getElementById('entity_type').value;
+
+            if (submitType === 'json') {
+                var formData = {};
+                formData['entity_type'] = entityType;
+
+                if (entityType === 'species') {
+                    formData['name'] = document.getElementById('species_name').value;
+
+                } else if (entityType === 'animal') {
+                    formData['name'] = document.getElementById('animal_name').value;
+
+                } else if (entityType === 'venue') {
+                    formData['name'] = document.getElementById('venue_name').value;
+          
+                }
+
+                fetch('/add_entity/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}' // Django CSRF token
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+           
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+             
+                });
+            } else if (submitType === 'form') {
+        
+                form.submit();
+            }
+        }
+        document.getElementById('entity_type').addEventListener('change', function() {
+            var entityType = this.value;
+            var speciesFields = document.getElementById('speciesFields');
+            var animalFields = document.getElementById('animalFields');
+            var venueFields = document.getElementById('venueFields');
+
+            if (entityType === 'species') {
+                speciesFields.style.display = 'block';
+                animalFields.style.display = 'none';
+                venueFields.style.display = 'none';
+            } else if (entityType === 'animal') {
+                speciesFields.style.display = 'none';
+                animalFields.style.display = 'block';
+                venueFields.style.display = 'none';
+            } else if (entityType === 'venue') {
+                speciesFields.style.display = 'none';
+                animalFields.style.display = 'none';
+                venueFields.style.display = 'block';
+            }
+        });
+    </script>
+    <div>
+        <button onclick="location.href='/homepage/'">Homepage</button>
+    </div>
+</body>
+</html>
+</body>
+</html>
