@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Entity</title>
+</head>
+<body>
+    <h2>Delete Entity</h2>
+    
+    <h3>Species</h3>
+    <ul>
+        {% for species in species_list %}
+        <li>
+            {{ species.name }} - <button onclick="deleteEntity('species', {{ species.id }})">Delete</button>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <h3>Animal</h3>
+    <ul>
+        {% for animal in animal_list %}
+        <li>
+            {{ animal.name }} - <button onclick="deleteEntity('animal', {{ animal.id }})">Delete</button>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <h3>Venue</h3>
+    <ul>
+        {% for venue in venue_list %}
+        <li>
+            {{ venue.name }} - <button onclick="deleteEntity('venue', {{ venue.id }})">Delete</button>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        function deleteEntity(entityType, entityId) {
+            fetch('/delete_entity/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: new URLSearchParams({
+                    entity_type: entityType,
+                    entity_id: entityId
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload(); // Refresh page after successful deletion
+                } else {
+                    console.error('Error deleting entity:', response.statusText);
+                }
+            })
+            .catch(error => console.error('Error deleting entity:', error));
+        }
+    </script>
+    <div>
+        <button onclick="location.href='/homepage/'">Homepage</button>
+    </div>
+</body>
+</html>
