@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animal Search</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+    .container {
+      width: 80%;
+      margin: auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-top: 50px;
+    }
+    header,
+    nav,
+    aside,
+    main {
+      padding: 10px;
+      margin-bottom: 20px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+    nav ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      justify-content: space-between;
+    }
+    nav ul li {
+      display: inline;
+      margin-right: 20px;
+    }
+    a {
+      color: #000000;
+      text-decoration: none;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header nav {
+      margin-left: auto;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Zoo Connect Staff Portal</h1>
+    <nav>
+        <ul>
+            <li><a href="#">User Option</a></li>
+            <li><a href="#">Notification</a></li>
+            <li><a href="#">IT Support</a></li>
+          </ul>
+      </nav>
+  </header>
+  
+  <nav>
+    <ul>
+      <li><a href="#" target="_self">Home</a></li>
+      <li><a href="#">My Area</a></li>
+      <li><a href="#">Venue Management</a></li>
+      <li><a href="#" target="_self">Animal Management</a></li>
+      <li><a href="#">Festival Management</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <main>
+      <nav>
+        <ul>
+          <li><a href="#" target="_self">Add Animal</a></li>
+          <li><a href="#" target="_self">Delete Animal</a></li>
+          <li><a href="#" target="_self">Update Animal</a></li>
+          <li><a href="#" target="_self">Search Animal</a></li>
+          <li><a href="#" target="_self">Back</a></li>
+        </ul>
+      </nav>
+      <h1>Search Animal</h1>
+      <form id="searchAnimalForm">
+          <label for="name">Name:</label><br>
+          <input type="text" id="name" name="name"><br>
+          
+          <button type="button" onclick="searchAnimal()">Search</button>
+      </form>
+      <div id="searchResults">
+
+      </div>
+    </main>
+  </div>
+  <script>
+    function searchAnimal() {
+        var keyword = document.getElementById('name').value;
+
+        fetch(`http://localhost:8000/search_animal/?keyword=${keyword}`, {
+            method: 'GET',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+        })
+        .then(data => {
+            var resultsContainer = document.getElementById('searchResults');
+            resultsContainer.innerHTML = '';
+            
+            if (data && data.length > 0) {
+                var resultList = document.createElement('ul');
+                data.forEach(animal => {
+                    var listItem = document.createElement('li');
+                    listItem.textContent = `${animal.name}, ${animal.age}, ${animal.diet}, ${animal.species}, ${animal.venue}`;
+                    resultList.appendChild(listItem);
+                });
+                resultsContainer.appendChild(resultList);
+            } else {
+                resultsContainer.textContent = 'No animals found with the given keyword.';
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            alert('An error occurred while searching the animal.');
+        })
+
+    }
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animal Edition</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+    .container {
+      width: 80%;
+      margin: auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-top: 50px;
+    }
+    header,
+    nav,
+    aside,
+    main {
+      padding: 10px;
+      margin-bottom: 20px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+    nav ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      justify-content: space-between;
+    }
+    nav ul li {
+      display: inline;
+      margin-right: 20px;
+    }
+    a {
+      color: #000000;
+      text-decoration: none;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header nav {
+      margin-left: auto;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Zoo Connect Staff Portal</h1>
+    <nav>
+        <ul>
+            <li><a href="#">User Option</a></li>
+            <li><a href="#">Notification</a></li>
+            <li><a href="#">IT Support</a></li>
+          </ul>
+      </nav>
+  </header>
+  
+  <nav>
+    <ul>
+      <li><a href="#" target="_self">Home</a></li>
+      <li><a href="#">My Area</a></li>
+      <li><a href="#">Venue Management</a></li>
+      <li><a href="#" target="_self">Animal Management</a></li>
+      <li><a href="#">Festival Management</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <main>
+      <nav>
+        <ul>
+          <li><a href="#" target="_self">Add Animal</a></li>
+          <li><a href="#" target="_self">Delete Animal</a></li>
+          <li><a href="#" target="_self">Update Animal</a></li>
+          <li><a href="#" target="_self">Search Animal</a></li>
+          <li><a href="#" target="_self">Back</a></li>
+        </ul>
+      </nav>
+      <h1>Edit Animal</h1>
+      <form id="editAnimalForm">
+          <label for="id">ID:</label><br>
+          <input type="text" id="id" name="id"><br>
+
+          <label for="name">Name:</label><br>
+          <input type="text" id="name" name="name"><br>
+          
+          <label for="age">Age:</label><br>
+          <input type="text" id="age" name="age"><br>
+          
+          <label for="diet">Diet:</label><br>
+          <input type="text" id="diet" name="diet"><br>
+          
+          <label for="species">Species:</label><br>
+          <input type="text" id="species" name="species"><br>
+          
+          <label for="venue">Venue:</label><br>
+          <input type="text" id="venue" name="venue"><br>
+          
+          <button type="button" onclick="editAnimal()">Edit Animal</button>
+      </form>
+    </main>
+  </div>
+  <script>
+    function editAnimal() {
+        var animalId = document.getElementById('id').value;
+
+        var formData = {
+            'name': document.getElementById('name').value,
+            'age': document.getElementById('age').value,
+            'diet': document.getElementById('diet').value,
+            'species': document.getElementById('species').value,
+            'venue': document.getElementById('venue').value
+        };
+
+        fetch(`http://localhost:8000/edit_animal/${animalId}/`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+        })
+        .then(data => {
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            alert('An error occurred while editing the animal.');
+        })
+
+    }
+
+  </script>
+</body>
+</html>

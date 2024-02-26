@@ -49,7 +49,6 @@ Venue "1" --> "0..*" Animal: has
 # Use Case Diagram
 
 @startuml
-
 left to right direction
 
 actor "Tourist" << human >> as T
@@ -63,6 +62,12 @@ rectangle "Digital Zoo\nManagement System" {
       usecase (CRUD Animal) as UC1
 
     }
+
+  }
+  
+  rectangle "Verification" << application >> {
+
+    usecase (Login in) as UC4
 
   }
 
@@ -80,7 +85,9 @@ rectangle "Digital Zoo\nManagement System" {
   
 }
 
-ZS --> UC1
+ZS --> UC4
+
+UC4 --> UC1
 
 UC1 --> UC7
 
@@ -91,4 +98,45 @@ T --> UC5
 UC5 --> UC8
 
 UC8 --> T
+@enduml
+
+# Sequential Diagram
+
+@startuml
+
+actor Tourist
+actor ZooStaff
+
+participant "Tourist Interface" as TI
+participant "Verification" as V
+participant "Staff Portal" as SP
+participant "Database Server" as DB
+
+Tourist -> TI: Browse Information
+activate TI
+TI -> DB: Send Request
+activate DB
+DB -> TI: Return Data
+deactivate DB
+deactivate TI
+
+ZooStaff -> V: Login in
+activate V
+V -> DB: Send request
+activate DB
+DB -> V: Return Data
+deactivate DB
+V -> V: Compare Information
+V -> ZooStaff: Return Results
+deactivate V
+
+ZooStaff -> SP: CRUD Animal
+activate SP
+SP -> DB: CRUD Data
+activate DB
+DB -> SP: Return Data
+deactivate DB
+SP -> ZooStaff: Return Results
+deactivate SP
+
 @enduml
