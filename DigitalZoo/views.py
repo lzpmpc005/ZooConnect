@@ -1,4 +1,4 @@
-from django.shortcuts import render , redirect
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Venue, Animal, Species
 from .models import JsonResponse
