@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'DigitalZoo',
-    'bootstrap5',
+
 ]
 
 MIDDLEWARE = [
