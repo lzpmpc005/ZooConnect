@@ -51,8 +51,14 @@ def add_entity(request):
             temperature = data.get('temperature')
             humidity = data.get('humidity')
             light_intensity = data.get('light_intensity')
-            Species.objects.create(name=name, habitat=habitat, temperature=temperature, humidity=humidity, light_intensity=light_intensity)
-            return JsonResponse({'message': 'Species added successfully'}, status=201)
+
+            if not name.isalpha():
+                return JsonResponse({'error': 'Name should contain only alphabetic characters'}, status=400)
+            try:
+                Species.objects.create(name=name, habitat=habitat, temperature=temperature, humidity=humidity, light_intensity=light_intensity)
+                return JsonResponse({'message': 'Species added successfully'}, status=201)
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=500)
 
         elif entity_type == 'animal':
 
@@ -63,8 +69,14 @@ def add_entity(request):
             venue_id = data.get('venue_id')  # 提取场地 ID
             species = Species.objects.get(pk=species_id)
             venue = Venue.objects.get(pk=venue_id)
-            Animal.objects.create(name=name, age=age, diet=diet, species=species, venue=venue)
-            return JsonResponse({'message': 'Animal added successfully'}, status=201)
+
+            if not name.isalpha():
+                return JsonResponse({'error': 'Name should contain only alphabetic characters'}, status=400)
+            try:
+                Animal.objects.create(name=name, age=age, diet=diet, species=species, venue=venue)
+                return JsonResponse({'message': 'Animal added successfully'}, status=201)
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=500)
 
         elif entity_type == 'venue':
 
@@ -75,8 +87,14 @@ def add_entity(request):
             temperature = data.get('temperature')
             humidity = data.get('humidity')
             light_intensity = data.get('light_intensity')
-            Venue.objects.create(name=name, habitat=habitat, location=location, size=size, temperature=temperature, humidity=humidity, light_intensity=light_intensity)
-            return JsonResponse({'message': 'Venue added successfully'}, status=201)
+
+            if not name.isalpha():
+                return JsonResponse({'error': 'Name should contain only alphabetic characters'}, status=400)
+            try:
+                Venue.objects.create(name=name, habitat=habitat, location=location, size=size, temperature=temperature, humidity=humidity, light_intensity=light_intensity)
+                return JsonResponse({'message': 'Venue added successfully'}, status=201)
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=500)
 
         else:
 
@@ -194,8 +212,13 @@ def edit_entity(request):
                 species.temperature = data.get('temperature', species.temperature)
                 species.humidity = data.get('humidity', species.humidity)
                 species.light_intensity = data.get('light_intensity', species.light_intensity)
-                species.save()
-                return JsonResponse({'message': 'Species updated successfully'})
+                if not species.name.isalpha():
+                    return JsonResponse({'error': 'Name should contain only alphabetic characters'}, status=400)
+                try:
+                    species.save()
+                    return JsonResponse({'message': 'Species updated successfully'})
+                except Exception as e:
+                    return JsonResponse({'error': str(e)}, status=500)
             except Species.DoesNotExist:
                 return JsonResponse({'error': 'Species does not exist'}, status=404)
         elif entity_type == 'animal':
@@ -207,8 +230,13 @@ def edit_entity(request):
                 # Assuming species and venue are foreign keys in Animal model
                 animal.species_id = data.get('species_id', animal.species_id)
                 animal.venue_id = data.get('venue_id', animal.venue_id)
-                animal.save()
-                return JsonResponse({'message': 'Animal updated successfully'})
+                if not animal.name.isalpha():
+                    return JsonResponse({'error': 'Name should contain only alphabetic characters'}, status=400)
+                try:
+                    animal.save()
+                    return JsonResponse({'message': 'Animal updated successfully'})
+                except Exception as e:
+                    return JsonResponse({'error': str(e)}, status=500)
             except Animal.DoesNotExist:
                 return JsonResponse({'error': 'Animal does not exist'}, status=404)
         elif entity_type == 'venue':
@@ -221,8 +249,13 @@ def edit_entity(request):
                 venue.temperature = data.get('temperature', venue.temperature)
                 venue.humidity = data.get('humidity', venue.humidity)
                 venue.light_intensity = data.get('light_intensity', venue.light_intensity)
-                venue.save()
-                return JsonResponse({'message': 'Venue updated successfully'})
+                if not venue.name.isalpha():
+                    return JsonResponse({'error': 'Name should contain only alphabetic characters'}, status=400)
+                try:
+                    venue.save()
+                    return JsonResponse({'message': 'Venue updated successfully'})
+                except Exception as e:
+                    return JsonResponse({'error': str(e)}, status=500)
             except Venue.DoesNotExist:
                 return JsonResponse({'error': 'Venue does not exist'}, status=404)
         else:
