@@ -47,3 +47,32 @@ class VenueAdmin(admin.ModelAdmin):
 class AnimalAdmin(admin.ModelAdmin):
     list_display = ('name', 'age', 'diet', 'species', 'venue')
     search_fields = ('name', 'diet', 'species__name', 'venue__name')
+
+class Staff(models.Model):
+    username = models.CharField(max_length=100)
+    password = models.CharField(max_length=100)
+
+    def _str_(self):
+        return self.username
+    
+# zookeeper is inherited from staff
+class Zookeeper(Staff):
+    responsibility = models.CharField(max_length=100)
+    qualification = models.CharField(max_length=100)
+
+    def _str_(self):
+        return self.username
+    
+# normally should be more tables (food, medicine, status, etc) related
+# for simplifying only related to animal and zookeeper to track
+class CareLog(models.Model):
+    animal = models.ForeignKey(Animal, on_delete=models.CASCADE)
+    zookeeper = models.ForeignKey(Zookeeper, on_delete=models.CASCADE)
+    weight = models.IntegerField()
+    temperature = models.FloatField()
+    diet = models.CharField(max_length=100)
+    medicine = models.CharField(max_length=100)
+    date = models.DateField()
+
+    def _str_(self):
+        return f"CareLog {self.log_id} for Animal {self.animal_id}"
