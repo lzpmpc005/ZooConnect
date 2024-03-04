@@ -1,0 +1,12 @@
+{% include 'head.html' %}
+<body>
+{% include 'svgandheader.html' %}
+    <h1>Welcome to the Homepage</h1>
+    <div>
+        <button onclick="location.href='/add_entity/'">Add Entity</button>
+        <button onclick="location.href='/delete_entity/'">Delete Entity</button>
+        <button onclick="location.href='/search_entity/'">Search Entity</button>
+        <button onclick="location.href='/edit_entity/'">Edit Entity</button>
+    </div>
+    {% include 'footer.html' %}
+</body>

@@ -1,19 +1,26 @@
+<<<<<<< Updated upstream
+{% include 'head.html' %}
+=======
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Entity</title>
 </head>
+>>>>>>> Stashed changes
 <body>
+{% include 'svgandheader.html' %}
     <h2>Search Entity</h2>
     <input type="text" id="searchInput" placeholder="Enter keyword">
     <button onclick="searchEntities()">Search</button>
     <div id="searchResults">
 
     </div>
-
-    <script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}">
+    
         function searchEntities() {
             var keyword = document.getElementById('searchInput').value;
             fetch('/search_entity/', {
@@ -57,5 +64,6 @@
     <div>
         <button onclick="location.href='/homepage/'">Homepage</button>
     </div>
+        {% include 'footer.html' %}
 </body>
 </html>

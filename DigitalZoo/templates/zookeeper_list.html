@@ -1,0 +1,13 @@
+{% include 'head.html' %}
+<body>
+    {% include 'svgandheader.html' %}
+
+    <h1>Zookeeper List</h1>
+    <ul>
+        {% for zookeeper in zookeepers %}
+            <li>{{ zookeeper.username }} <a href="{% url 'delete_zookeeper' zookeeper.id %}">Delete</a></li>
+        {% endfor %}
+    </ul>
+    {% include 'footer.html' %}
+</body>
+

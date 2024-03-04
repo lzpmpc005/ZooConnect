@@ -1,0 +1,18 @@
+{% include 'head.html' %}
+<body>
+{% include 'svgandheader.html' %}
+<h1>Care Log List</h1>
+<ul>
+    {% for care_log in care_logs %}
+    <li>{{ care_log.date }} - {{ care_log.animal }} - {{ care_log.zookeeper }}</li>
+    <form method="post" action="{% url 'delete_care_log' care_log.id %}">
+        {% csrf_token %}
+        <button type="submit">Delete</button>
+    </form>
+    {% endfor %}
+</ul>
+<a href="{% url 'add_care_log' %}">Add Care Log</a>
+</body>
+{% include 'footer.html' %}
+</html>
+
