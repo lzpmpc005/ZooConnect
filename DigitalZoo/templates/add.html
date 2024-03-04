@@ -1,25 +1,154 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Entity</title>
-</head>
+{% include 'head.html' %}
 <body>
-    <h2>Add Entity</h2>
-    <form id="addEntityForm" method="POST">
+    {% include 'svgandheader.html' %}
+    {% comment %} <form id="addEntityForm" method="POST">
         {% csrf_token %}
         <label for="entity_type">Entity Type:</label>
         <select name="entity_type" id="entity_type">
             <option value="species">Species</option>
             <option value="animal">Animal</option>
             <option value="venue">Venue</option>
+            <option value='zookeeper'>Zookeeper</option>
+            
         </select>
         <br><br>
- 
-        <div id="speciesFields">
+         {% endcomment %}
+        
+        {% comment %} <div id ='ZookeeperFields' style="display: none;">
+            
+            <label for= 'name'> Name:</label>
+            <input type = 'text' id = 'zool_keeper_name' name = 'name'><br>
+            <label for = 'responsibility'> responsibility:</label>
+            <input type = 'text' id = 'responsibility' name = 'responsibility'><br>
+            <label for = 'qualification'> qualification:</label>
+            <input type = 'text' id = 'qualification' name = 'qualification'><br>
+        </div>
+ {% endcomment %}
+
+<div class="container">
+  <main>
+    <div class="py-5 text-center">
+      <img class="d-block mx-auto mb-4" src="https://images.unsplash.com/photo-1566487097168-e91a4f38bee2?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" width="300" height="150">
+      <h2>Checkout form</h2>
+      <p class="lead">Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p>
+    </div>
+    
+    <form id="addEntityForm" method="POST">
+        {% csrf_token %}
+    <label for="entity_type">Entity Type:</label>
+      <select name="entity_type" id="entity_type" class="form-select mb-3">
+            <option value="species">Species</option>
+            <option value="animal">Animal</option>
+            <option value="venue">Venue</option>
+            <option value='zookeeper'>Zookeeper</option>
+       </select>
+    {% comment %} </form>
+    <div class="row g-5">
+      <div class="col-md-7 col-lg-8">
+        <h4 class="mb-3">Entity details</h4>
+        <form class="needs-validation" novalidate>
+          <div class="row g-3"> {% endcomment %}
+       
+
+            {% comment %} <div class="col-md-5">
+              <label for="country" class="form-label">Country</label>
+              <select class="form-select" id="country" required>
+                <option value="">Choose...</option>
+                <option>United States</option>
+              </select>
+              <div class="invalid-feedback">
+                Please select a valid country.
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <label for="state" class="form-label">State</label>
+              <select class="form-select" id="state" required>
+                <option value="">Choose...</option>
+                <option>California</option>
+              </select>
+              <div class="invalid-feedback">
+                Please provide a valid state.
+              </div>
+            </div>
+          </div> {% endcomment %}
+
+    <div id="speciesFields" style="display: none;">
+       <label for="species_name">Name:</label>
+       <input type="text" id="species_name" name="name" class="form-control mb-3"><br>
+       <label for="habitat">Habitat:</label>
+       <input type="text" id="habitat" name="habitat" class="form-control mb-3"><br>
+      <label for="temperature">Temperature:</label>
+      <input type="text" id="temperature" name="temperature" class="form-control mb-3"><br>
+      <label for="humidity">Humidity:</label>
+      <input type="text" id="humidity" name="humidity" class="form-control mb-3"><br>
+      <label for="light_intensity">Light Intensity:</label>
+      <input type="text" id="light_intensity" name="light_intensity" class="form-control mb-3"><br>
+    </div>
+
+    <div id="animalFields" style="display: none;">
+      <label for="animal_name">Name:</label>
+      <input type="text" id="animal_name" name="name" class="form-control mb-3"><br>
+      <label for="age">Age:</label>
+      <input type="text" id="age" name="age" class="form-control mb-3"><br>
+      <label for="diet">Diet:</label>
+      <input type="text" id="diet" name="diet" class="form-control mb-3"><br>
+      <label for="species">Species:</label>
+      <select name="species" id="species" class="form-select mb-3">
+        {% for species in species_list %}
+        <option value="{{ species.id }}">{{ species.name }}</option>
+        {% endfor %}
+      </select><br>
+      <label for="venue">Venue:</label>
+      <select name="venue" id="venue" class="form-select mb-3">
+        {% for venue in venue_list %}
+        <option value="{{ venue.id }}">{{ venue.name }}</option>
+        {% endfor %}
+      </select><br>
+    </div>
+
+    <div id="venueFields" style="display: none;">
+     <label for="venue_name">Name:</label>
+     <input type="text" id="venue_name" name="name" class="form-control mb-3"><br>
+     <label for="venue_habitat">Habitat:</label>
+     <input type="text" id="venue_habitat" name="habitat" class="form-control mb-3"><br>
+     <label for="location">Location:</label>
+     <input type="text" id="location" name="location" class="form-control mb-3"><br>
+     <label for="size">Size:</label>
+     <input type="text" id="size" name="size" class="form-control mb-3"><br>
+     <label for="venue_temperature">Temperature:</label>
+     <input type="text" id="venue_temperature" name="temperature" class="form-control mb-3"><br>
+     <label for="venue_humidity">Humidity:</label>
+     <input type="text" id="venue_humidity" name="humidity" class="form-control mb-3"><br>
+     <label for="venue_light_intensity">Light Intensity:</label>
+     <input type="text" id="venue_light_intensity" name="light_intensity" class="form-control mb-3"><br>
+    </div>
+     
+    <div id='zookeeperFields' style="display: none;">
+     <label for="zookeeper_name">Name:</label>
+     <input type="text" id="zookeeper_name" name="name" class="form-control mb-3"><br>
+     <label for="zookeeper_responsibility">responsibility:</label>
+     <input type="text" id="zookeeper_responsibility" name="zookeeper_responsibility" class="form-control mb-3"><br>
+     <label for="location">qualification:</label>
+     <input type="text" id="zookeeper_qualification" name="zookeeper_qualification" class="form-control mb-3"><br>
+    </div>
+    
+    <br>
+          <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to Submit</button>
+        
+        
+    </form>
+      
+    </div>
+
+  </main>
+
+
+
+
+        {% comment %} <div id="speciesFields">
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name"><br>
+            <input type="text" id="species_name" name="name"><br>
             <label for="habitat">Habitat:</label>
             <input type="text" id="habitat" name="habitat"><br>
             <label for="temperature">Temperature:</label>
@@ -69,8 +198,16 @@
         </div>
         <br>
         <button type="submit">Submit</button>
-    </form>
+    </form> {% endcomment %}
+    
+    
+    
+    
     <script>
+
+
+
+
         function submitForm(submitType) {
             var form = document.getElementById('addEntityForm');
             var entityType = document.getElementById('entity_type').value;
@@ -88,6 +225,10 @@
                 } else if (entityType === 'venue') {
                     formData['name'] = document.getElementById('venue_name').value;
           
+                } else if (entityType === 'zookeeper') {
+                    formData['name'] = document.getElementById('zookeeper_name').value;
+                    formData['responsibility'] = document.getElementById('zookeeper_responsibility').value;
+                    formData['qualification'] = document.getElementById('zookeeper_qualification').value;
                 }
 
                 fetch('/add_entity/', {
@@ -117,26 +258,32 @@
             var speciesFields = document.getElementById('speciesFields');
             var animalFields = document.getElementById('animalFields');
             var venueFields = document.getElementById('venueFields');
-
+            var zookeeperFields = document.getElementById('zookeeperFields');
             if (entityType === 'species') {
                 speciesFields.style.display = 'block';
                 animalFields.style.display = 'none';
                 venueFields.style.display = 'none';
+                zookeeperFields.style.display = 'none';
             } else if (entityType === 'animal') {
                 speciesFields.style.display = 'none';
                 animalFields.style.display = 'block';
                 venueFields.style.display = 'none';
+                zookeeperFields.style.display = 'none';
+
             } else if (entityType === 'venue') {
                 speciesFields.style.display = 'none';
                 animalFields.style.display = 'none';
                 venueFields.style.display = 'block';
+                zookeeperFields.style.display = 'none';
+            } else if (entityType === 'zookeeper') {
+                speciesFields.style.display = 'none';
+                animalFields.style.display = 'none';
+                venueFields.style.display = 'none';
+                zookeeperFields.style.display = 'block';
             }
         });
     </script>
-    <div>
-        <button onclick="location.href='/homepage/'">Homepage</button>
-    </div>
+    {% include 'footer.html' %}
 </body>
-</html>
-</body>
-</html>
+
+

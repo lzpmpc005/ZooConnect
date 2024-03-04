@@ -1,17 +1,13 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Venue, Animal, Species
+from .models import Venue, Animal, Species,Zookeeper
 from .models import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 import random
 from django.contrib.auth import authenticate, login as auth_login
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login as auth_login
-
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login as auth_login
-
+from .models import CareLog
+from .models import Animal
 @csrf_exempt
 def login_view(request):
     if request.method == 'POST':
@@ -27,105 +23,148 @@ def login_view(request):
         return render(request, 'login.html')
 from django.shortcuts import render
 
+
+def tourists_view(request):
+    animals = Animal.objects.all()
+    ages = [a.age for a in animals]
+    diets = [a.diet for a in animals]
+    species = [a.species.name for a in animals]
+
+    context = {
+        "animals": animals,
+        "ages": ages,
+        "diets": diets,
+        "species": species,
+    }
+    return render(request, 'tourists.html', context)
+
+
+
 def homepage_view(request):
-    return render(request, 'homepage.html')
+    animals = Animal.objects.all()
+    ages = [a.age for a in animals]
+    diets = [a.diet for a in animals]
+    species = [a.species.name for a in animals]
+    venues = Venue.objects.all()
+    zookeepers = Zookeeper.objects.all()
+    care_logs = CareLog.objects.all()
+    context = {
+        "animals": animals,
+        "ages": ages,
+        "diets": diets,
+        "species": species,
+        "venues": venues,
+        "zookeepers": zookeepers,
+        "care_logs": care_logs,
+    }
+    return render(request, 'homepage.html', context)
 
-
+def success_view(request):
+    return render(request, 'success.html')
+def error_view(request):
+    return render(request, 'error.html')
+def sign_in(request):
+    return render(request, 'sign_in.html')
 @csrf_exempt
 def add_entity(request):
     if request.method == "GET":
-
+        animal_list = Animal.objects.all()
         species_list = Species.objects.all()
-        venues_list = Venue.objects.all()
-        return render(request, 'add.html', {"species_list": species_list, "venues_list": venues_list})
+        venue_list = Venue.objects.all()
+        zookeeper_list = Zookeeper.objects.all()
+        return render(request, 'add.html', {"species_list": species_list, "venue_list": venue_list, 'animal_list': animal_list, 'zookeeper_list': zookeeper_list})
 
     elif request.method == 'POST':
-
-        data = json.loads(request.body)
-        entity_type = data.get('entity_type')
+        entity_type = request.POST.get('entity_type')
 
         if entity_type == 'species':
-
-            name = data.get('name')
-            habitat = data.get('habitat')
-            temperature = data.get('temperature')
-            humidity = data.get('humidity')
-            light_intensity = data.get('light_intensity')
+            name = request.POST.get('name')
+            habitat = request.POST.get('habitat')
+            temperature = request.POST.get('temperature')
+            humidity = request.POST.get('humidity')
+            light_intensity = request.POST.get('light_intensity')
             Species.objects.create(name=name, habitat=habitat, temperature=temperature, humidity=humidity, light_intensity=light_intensity)
-            return JsonResponse({'message': 'Species added successfully'}, status=201)
+            return redirect('success')  # Redirect to success page
 
         elif entity_type == 'animal':
-
-            name = data.get('name')
-            age = data.get('age')
-            diet = data.get('diet')
-            species_id = data.get('species_id')  # 提取物种 ID
-            venue_id = data.get('venue_id')  # 提取场地 ID
+            name = request.POST.get('name')
+            age = request.POST.get('age')
+            diet = request.POST.get('diet')
+            species_id = request.POST.get('species_id')
+            venue_id = request.POST.get('venue_id')
             species = Species.objects.get(pk=species_id)
             venue = Venue.objects.get(pk=venue_id)
             Animal.objects.create(name=name, age=age, diet=diet, species=species, venue=venue)
-            return JsonResponse({'message': 'Animal added successfully'}, status=201)
+            return redirect('success')
 
         elif entity_type == 'venue':
-
-            name = data.get('name')
-            habitat = data.get('habitat')
-            location = data.get('location')
-            size = data.get('size')
-            temperature = data.get('temperature')
-            humidity = data.get('humidity')
-            light_intensity = data.get('light_intensity')
+            name = request.POST.get('name')
+            habitat = request.POST.get('habitat')
+            location = request.POST.get('location')
+            size = request.POST.get('size')
+            temperature = request.POST.get('temperature')
+            humidity = request.POST.get('humidity')
+            light_intensity = request.POST.get('light_intensity')
             Venue.objects.create(name=name, habitat=habitat, location=location, size=size, temperature=temperature, humidity=humidity, light_intensity=light_intensity)
-            return JsonResponse({'message': 'Venue added successfully'}, status=201)
+            return redirect('success')
 
+        elif entity_type == "zookeeper":
+            name = request.POST.get('name')
+            qualification = request.POST.get('qualification')
+            responsibility = request.POST.get('responsibility')
+            venue_id = request.POST.get('venue_id')
+            Zookeeper.objects.create(name=name, qualification=qualification, responsibility=responsibility)
+            return redirect('success')
+
+        elif entity_type == "carelog":
+            animal_id = request.POST.get('animal_id')
+            zookeeper_id = request.POST.get('zookeeper_id')
+            animal = Animal.objects.get(pk=animal_id)
+            zookeeper = Zookeeper.objects.get(pk=zookeeper_id)
+            CareLog.objects.create(animal=animal, zookeeper=zookeeper)
+            return redirect('success')
         else:
-
-            return JsonResponse({'error': 'Invalid entity type'}, status=400)
+            return render(request, 'error.html', {'error': 'Invalid entity type'})
 
     else:
-
-        return JsonResponse({'error': 'Only GET and POST requests are allowed'}, status=400)
-
-
+        return render(request, 'error.html', {'error': 'Only GET and POST requests are allowed'})
+# 删除实体的视图函数
 def delete_entity(request):
     if request.method == 'GET':
+        # 获取所有的物种、动物和场馆列表
         species_list = Species.objects.all()
         animal_list = Animal.objects.all()
         venue_list = Venue.objects.all()
         return render(request, 'delete.html', {'species_list': species_list, 'animal_list': animal_list, 'venue_list': venue_list})
     elif request.method == 'POST':
-        entity_type = request.POST.get('entity_type')
-        entity_id = request.POST.get('entity_id')
+        entity_type = request.POST.get('delete_type')  # 获取要删除的实体类型
+        entity_id = request.POST.get('entity_id')  # 获取要删除的实体ID
+
+        # 根据实体类型执行相应的删除操作
         if entity_type == 'species':
             try:
                 species = Species.objects.get(pk=entity_id)
                 species.delete()
-                return JsonResponse({'message': 'Species deleted successfully'})
+                return render(request, 'success.html', {'message': 'Species deleted successfully'})
             except Species.DoesNotExist:
-                return JsonResponse({'error': 'Species does not exist'}, status=404)
+                return render(request, 'error.html', {'error': 'Species does not exist'}, status=404)
         elif entity_type == 'animal':
             try:
                 animal = Animal.objects.get(pk=entity_id)
                 animal.delete()
-                return JsonResponse({'message': 'Animal deleted successfully'})
+                return render(request, 'success.html', {'message': 'Animal deleted successfully'})
             except Animal.DoesNotExist:
-                return JsonResponse({'error': 'Animal does not exist'}, status=404)
+                return render(request, 'error.html', {'error': 'Animal does not exist'}, status=404)
         elif entity_type == 'venue':
             try:
                 venue = Venue.objects.get(pk=entity_id)
                 venue.delete()
-                return JsonResponse({'message': 'Venue deleted successfully'})
+                return render(request, 'success.html', {'message': 'Venue deleted successfully'})
             except Venue.DoesNotExist:
-                return JsonResponse({'error': 'Venue does not exist'}, status=404)
+                return render(request, 'error.html', {'error': 'Venue does not exist'}, status=404)
         else:
-            return JsonResponse({'error': 'Invalid entity type'}, status=400)
+            return render(request, 'error.html', {'error': 'Invalid entity type'}, status=400)
 
-
-from django.shortcuts import render
-from django.http import JsonResponse
-from .models import Species, Animal, Venue
-from django.views.decorators.csrf import csrf_exempt
-import json
 
 
 @csrf_exempt
@@ -225,7 +264,57 @@ def edit_entity(request):
                 return JsonResponse({'message': 'Venue updated successfully'})
             except Venue.DoesNotExist:
                 return JsonResponse({'error': 'Venue does not exist'}, status=404)
+        elif entity_type == "zookeeper":
+            try:
+                zookeeper = Zookeeper.objects.get(pk=entity_id)
+                zookeeper.name = data.get('name', zookeeper.name)
+                zookeeper.age = data.get('age', zookeeper.age)
+                zookeeper.diet = data.get('diet', zookeeper.diet)
+                # Assuming species and venue are foreign keys in Zookeeper model
+                zookeeper.species_id = data.get('species_id', zookeeper.species_id)
+                zookeeper.venue_id = data.get('venue_id', zookeeper.venue_id)
+                zookeeper.save()
+                return JsonResponse({'message': 'Zookeeper updated successfully'})
+            except Zookeeper.DoesNotExist:
+                return JsonResponse({'error': 'Zookeeper does not exist'}, status=404)
+        elif entity_type == "carelog":
+            try:
+                carelog = CareLog.objects.get(pk=entity_id)
+                carelog.animal_id = data.get('animal_id', carelog.animal_id)
+                carelog.zookeeper_id = data.get('zookeeper_id', carelog.zookeeper_id)
+                carelog.save()
+                return JsonResponse({'message': 'Care log updated successfully'})
+            except CareLog.DoesNotExist:
+                return JsonResponse({'error': 'Care log does not exist'}, status=404)
         else:
             return JsonResponse({'error': 'Invalid entity type'}, status=400)
     else:
         return JsonResponse({'error': 'Only GET and POST requests are allowed'}, status=400)
+def staff_list(request):
+    staff_members = User.objects.filter(is_staff=True)
+    context = {'staff_members': staff_members}
+    return render(request, 'staff_list.html', context)
+
+def zookeeper_list(request):
+    zookeepers = Zookeeper.objects.all()
+    context = {'zookeepers': zookeepers}
+    return render(request, 'zookeeper_list.html', context)
+
+
+def care_log_list(request):
+    care_logs = CareLog.objects.all()
+    context = {'care_logs': care_logs}
+    return render(request, 'care_log_list.html', context)
+
+def care_log_detail(request, care_log_id):
+    care_log = CareLog.objects.get(pk=care_log_id)
+    context = {'care_log': care_log}
+    return render(request, 'care_log_detail.html', context)
+
+def delete_animal(request, animal_id):
+    try:
+        animal = Animal.objects.get(pk=animal_id)
+        animal.delete()
+        return redirect('animal_list')  # Redirect to the animal list page after deletion
+    except Animal.DoesNotExist:
+        return redirect('animal_list')  # Redirect to the animal list page if the animal does not exist

@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Entity</title>
-</head>
+{% include 'head.html' %}
 <body>
+{% include 'svgandheader.html' %}
     <h2>Search Entity</h2>
     <input type="text" id="searchInput" placeholder="Enter keyword">
     <button onclick="searchEntities()">Search</button>
@@ -57,5 +52,6 @@
     <div>
         <button onclick="location.href='/homepage/'">Homepage</button>
     </div>
+        {% include 'footer.html' %}
 </body>
 </html>

@@ -1,0 +1,12 @@
+{% include 'head.html' %}
+<body>
+    {% include 'svgandheader.html' %}
+    <h1>Care Log List</h1>
+    <ul>
+        {% for care_log in care_logs %}
+            <li>{{ care_log.animal.name }} - {{ care_log.date }} <a href="{% url 'delete_care_log' care_log.id %}">Delete</a></li>
+        {% endfor %}
+    </ul>
+    {% include 'footer.html' %}
+</body>
+</html>

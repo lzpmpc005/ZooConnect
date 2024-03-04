@@ -1,0 +1,13 @@
+{% include 'head.html' %}
+<body>
+    {% include 'svgandheader.html' %}
+<body>
+    <h1>Staff List</h1>
+    <ul>
+        {% for staff_member in staff_members %}
+            <li>{{ staff_member.username }} <a href="{% url 'delete_staff' staff_member.id %}">Delete</a></li>
+        {% endfor %}
+    </ul>
+    {% include 'footer.html' %}
+</body>
+</html>
