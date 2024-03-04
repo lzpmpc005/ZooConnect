@@ -6,8 +6,10 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import random
 from django.contrib.auth import authenticate, login as auth_login
-from .models import CareLog
 from .models import Animal
+from .models import CareLog
+from .forms import CareLogForm
+
 @csrf_exempt
 def login_view(request):
     if request.method == 'POST':
@@ -300,16 +302,24 @@ def zookeeper_list(request):
     context = {'zookeepers': zookeepers}
     return render(request, 'zookeeper_list.html', context)
 
+def add_care_log(request):
+    if request.method == 'POST':
+        form = CareLogForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('care_log_list')
+    else:
+        form = CareLogForm()
+    return render(request, 'add_care_log.html', {'form': form})
 
+def delete_care_log(request, care_log_id):
+    care_log = CareLog.objects.get(pk=care_log_id)
+    care_log.delete()
+    return redirect('care_log_list')
 def care_log_list(request):
     care_logs = CareLog.objects.all()
-    context = {'care_logs': care_logs}
-    return render(request, 'care_log_list.html', context)
+    return render(request, 'care_log_list.html', {'care_logs': care_logs})
 
-def care_log_detail(request, care_log_id):
-    care_log = CareLog.objects.get(pk=care_log_id)
-    context = {'care_log': care_log}
-    return render(request, 'care_log_detail.html', context)
 
 def delete_animal(request, animal_id):
     try:

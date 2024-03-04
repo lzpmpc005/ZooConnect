@@ -1,0 +1,12 @@
+{% include 'head.html' %}
+<body>
+{% include 'svgandheader.html' %}
+<h1>Add Care Log</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>
+{% include 'footer.html' %}
+</body>
+</html>
