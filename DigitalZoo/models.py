@@ -94,3 +94,13 @@ class CareLogAdmin(admin.ModelAdmin):
 
 
 
+class Tour(models.Model):
+    name = models.CharField(max_length=100)
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    route = models.JSONField(default=dict)
+    duration = models.JSONField(default=dict)
+    activity = models.JSONField(default=dict)
+    animal = models.JSONField(default=dict)
+    
+    def __str__(self):
+        return self.name
