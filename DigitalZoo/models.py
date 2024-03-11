@@ -91,9 +91,6 @@ class CareLogAdmin(admin.ModelAdmin):
 
 
 
-
-
-
 class Tour(models.Model):
     name = models.CharField(max_length=100)
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE)

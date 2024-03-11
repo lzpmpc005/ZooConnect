@@ -144,17 +144,7 @@ def add_entity(request):
             CareLog.objects.create(animal=animal, zookeeper=zookeeper)
             return redirect('success')
 
-
-            if not name.isalpha():
-                return JsonResponse({'error': 'Name should contain only alphabetic characters'}, status=400)
-            try:
-                Animal.objects.create(name=name, age=age, diet=diet, species=species, venue=venue)
-                return JsonResponse({'message': 'Animal added successfully'}, status=201)
-            except Exception as e:
-                return JsonResponse({'error': str(e)}, status=500)
-
         elif entity_type == 'venue':
-
             name = data.get('name')
             habitat = data.get('habitat')
             location = data.get('location')
@@ -170,26 +160,23 @@ def add_entity(request):
                 return JsonResponse({'message': 'Venue added successfully'}, status=201)
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=500)
-
-
         else:
             return render(request, 'error.html', {'error': 'Invalid entity type'})
 
     else:
         return render(request, 'error.html', {'error': 'Only GET and POST requests are allowed'})
-# 删除实体的视图函数
+
 def delete_entity(request):
     if request.method == 'GET':
-        # 获取所有的物种、动物和场馆列表
+
         species_list = Species.objects.all()
         animal_list = Animal.objects.all()
         venue_list = Venue.objects.all()
         return render(request, 'delete.html', {'species_list': species_list, 'animal_list': animal_list, 'venue_list': venue_list})
     elif request.method == 'POST':
-        entity_type = request.POST.get('delete_type')  # 获取要删除的实体类型
-        entity_id = request.POST.get('entity_id')  # 获取要删除的实体ID
+        entity_type = request.POST.get('delete_type')
+        entity_id = request.POST.get('entity_id')
 
-        # 根据实体类型执行相应的删除操作
         if entity_type == 'species':
             try:
                 species = Species.objects.get(pk=entity_id)
@@ -213,6 +200,7 @@ def delete_entity(request):
                 return render(request, 'error.html', {'error': 'Venue does not exist'}, status=404)
         else:
             return render(request, 'error.html', {'error': 'Invalid entity type'}, status=400)
+
 
 
 @csrf_exempt
@@ -384,6 +372,9 @@ def delete_animal(request, animal_id):
     try:
         animal = Animal.objects.get(pk=animal_id)
         animal.delete()
-        return redirect('animal_list')  # Redirect to the animal list page after deletion
+        return redirect('animal_list')
     except Animal.DoesNotExist:
-        return redirect('animal_list')  # Redirect to the animal list page if the animal does not exist
+        return redirect('animal_list')
+
+def tour(request):
+        return render(request, 'tour.html')
