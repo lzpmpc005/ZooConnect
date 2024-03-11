@@ -1,7 +1,11 @@
 
 from django.contrib import admin
 from django.urls import path
-from DigitalZoo.views import care_log_list, add_care_log, delete_care_log,sign_in,success_view,error_view,zookeeper_list,tourists_view,homepage_view,login_view,add_entity, edit_entity, search_entity, delete_entity
+from DigitalZoo.views import (care_log_list, add_care_log, delete_care_log,sign_in,success_view,error_view,zookeeper_list,
+                              tourists_view,homepage_view,login_view,add_entity, edit_entity, search_entity, delete_entity,
+                              tour
+
+                              )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -19,4 +23,5 @@ urlpatterns = [
     path('care_logs/', care_log_list, name='care_log_list'),
     path('care_logs/add/', add_care_log, name='add_care_log'),
     path('care_logs/delete/<int:care_log_id>/', delete_care_log, name='delete_care_log'),
+    path('tour/', tour, name='tour'),
     ]

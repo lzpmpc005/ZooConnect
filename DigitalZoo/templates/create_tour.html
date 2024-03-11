@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Tour</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 10px;
+        }
+        input[type="text"],
+        select {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        input[type="submit"] {
+            background-color: #000000;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .venue-fields {
+            display: block;
+        }
+        .selected-data {
+            margin-top: 20px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Create Tour</h2>
+        <form id="createTourForm">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" value="2024-02-28" readonly>
+
+            <div class="venue-fields">
+                <label for="venue">Venue:</label>
+                <select id="venue" name="venue">
+                    <option value="venue1">Venue1</option>
+                    <option value="venue2">Venue2</option>
+                    <option value="venue3">Venue3</option>
+                </select>
+
+                <label for="time">Time Slot:</label>
+                <select id="time" name="time">
+                    <option value="morning">Morning (9:00 AM - 12:00 PM)</option>
+                    <option value="afternoon">Afternoon (1:00 PM - 4:00 PM)</option>
+                </select>
+
+                <label for="activity">Activity Type:</label>
+                <select id="activity" name="activity">
+                    <option value="activity1">Activity 1</option>
+                    <option value="activity2">Activity 2</option>
+                    <option value="activity3">Activity 3</option>
+                </select>
+
+                <label for="animal">Animal:</label>
+                <select id="animal" name="animal">
+                    <option value="animal1">Animal 1</option>
+                    <option value="animal2">Animal 2</option>
+                    <option value="animal3">Animal 3</option>
+                </select>
+            </div>
+        </form>
+
+        <div class="selected-data">
+            <h3>Selected Data:</h3>
+            <p id="selectedData"></p>
+            <input type="submit" id="submitNodeBtn" value="Submit Node">
+            <input type="submit" id="submitTourBtn" value="Submit Tour">
+        </div>
+    </div>
+
+    <script>
+        var selectedData = [];  
+        document.getElementById("submitNodeBtn").addEventListener("click", function(event) {
+            event.preventDefault();
+            var formData = new FormData(document.getElementById("createTourForm"));
+            var date = formData.get("date");
+            var venue = formData.get("venue");
+            var time = formData.get("time");
+            var activity = formData.get("activity");
+            var animal = formData.get("animal");
+
+            var isDuplicate = selectedData.some(function(item) {
+                return item.date === date && item.venue === venue && item.time === time;
+            });
+
+            if (isDuplicate) {
+                alert("This venue is already booked for this period. Please choose another period.");
+                return;
+            }
+
+            selectedData.push({ date: date, venue: venue, time: time, activity: activity, animal: animal });
+            
+            var selectedDataElement = document.getElementById("selectedData");
+            var dataHtml = "";
+            selectedData.forEach(function(item) {
+                dataHtml += "Date: " + item.date + ", Venue: " + item.venue + ", Time: " + item.time + ", Activity: " + item.activity + ", Animal: " + item.animal + "<br>";
+            });
+            selectedDataElement.innerHTML = dataHtml;
+        });
+
+    </script>
+</body>
+</html>
